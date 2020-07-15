@@ -1,6 +1,6 @@
 const d3 = require('d3');
 
-class TreeChart {
+class OrgTree {
     constructor() {
         this.defaults = {
             svgWidth: 800,
@@ -883,4 +883,4 @@ class TreeChart {
 }
 
 
-module.exports = TreeChart;
+module.exports = OrgTree;
