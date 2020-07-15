@@ -1,0 +1,27 @@
+{
+  "name": "d3-org-tree",
+  "version": "0.0.1",
+  "description": "Organization tree, created with d3",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benyasin/d3-org-tree.git"
+  },
+  "keywords": [
+    "d3",
+    "org-tree",
+    "hierarchy"
+  ],
+  "dependencies": {
+    "d3": "*"
+  },
+  "author": "benyasin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/benyasin/d3-org-tree/issues"
+  },
+  "homepage": "https://github.com/benyasin/d3-org-tree#readme"
+}
