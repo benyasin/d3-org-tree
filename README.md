@@ -10,11 +10,9 @@
 
 #### A highly customizable org tree built with d3.js v5
 
-<br>
+<br/>
 
 ![tree](https://user-images.githubusercontent.com/1866848/87697076-3da59280-c7c4-11ea-830c-91f3727067ec.png)
-
-<br>
 
 ## Installing
 
@@ -29,7 +27,7 @@ import OrgTree from "d3-org-tree";
 
 const orgTree = new OrgTree()
 orgTree.container('body') //dom element
-       .data({})  //data object
+       .data(/**{}*/)     //data json array, example as below
        .svgWidth(800)
        .svgHeight(600)
        .initialZoom(.4)
@@ -77,37 +75,37 @@ orgTree.container('body') //dom element
             
 |  Properties  | Usage |
 |  --- | --- |
-|  svgWidth  | the svg width, and will be 100% of the container's width if not set|
-|  svgHeight  | the svg height, and will be `600` if not set |
-|  container  | the svg dom selector, can be a class name or dom tag name, the default value is `body`|
-|  backgroundColor  | background color of the svg container, the default value is `#fafafa` |
-|  data  | all nodes data definition, the data struct can be seen above |
-|  highlight  | define highlight styles of the current node |
-|  current  | mark the current chosen node |
-|  duration  | the transition duration, the default value is `600` |
-|  strokeWidth  | the stroke width of node, the default value is `3` |
-|  initialZoom  | the initial zoom scale, the default value is `1` |
-|  orientation  | the layout orientation, which value is one of `left-to-right`、`right-to-left`、`top-to-bottom`、`bottom-to-top`, and the default one is `right-to-left` |
+|  svgWidth  | `number`, the svg width, and will be 100% of the container's width if not set|
+|  svgHeight  | `number`, the svg height, and will be `600` if not set |
+|  container  | `string`, the svg dom selector, can be a class name or dom tag name, the default value is `body`|
+|  backgroundColor  | `string`, background color of the svg container, the default value is `#fafafa` |
+|  data  | `array`, all nodes data definition, the data struct can be seen above |
+|  highlight  | `object`, define highlight styles of the current node |
+|  current  | `string`, mark the current chosen node |
+|  duration  | `number`, the transition duration, the default value is `600` |
+|  strokeWidth  | `number`, the stroke width of node, the default value is `3` |
+|  initialZoom  | `number`, the initial zoom scale, the default value is `1` |
+|  orientation  | `string`, the layout orientation, which value is one of `left-to-right`、`right-to-left`、`top-to-bottom`、`bottom-to-top`, and the default one is `right-to-left` |
 
 |  Method  | Usage |
 |  --- | --- |
-|  onNodeClick(nodeId)  | callback after node clicked |
-|  onNodeAdd(nodeId)  | callback after the add button clicked |
-|  onNodeRemove(nodeId)  | callback after the remove button clicked |
+|  onNodeClick(nodeId)  | `function`, callback after node clicked |
+|  onNodeAdd(nodeId)  | `function`, callback after the add button clicked |
+|  onNodeRemove(nodeId)  | `function`,callback after the remove button clicked |
 
 |  Callback  | Usage |
 |  --- | --- |
-|  addNode(nodeJson)  | add a children node under a parent node you clicked |
-|  removeNode(nodeId)  | remove a node by the nodeId |
+|  addNode(nodeJson)  | `function`, add a children node under a parent node you clicked |
+|  removeNode(nodeId)  | `function`, remove a node by the nodeId |
 
 ## Changelog
 
-0.0.2 Changes:
+**0.0.2** Changes:
 
 * Add layout orientation support
 * Completed documentation
 
-0.0.1 Changes:
+**0.0.1** Changes:
 
 * The initial version first publish to npm library
 
