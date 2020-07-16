@@ -31,3 +31,6 @@ orgTree.container('body') //dom element
         })
        .render()
 ```
+
+### API
+

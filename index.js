@@ -50,6 +50,10 @@ class OrgTree {
         };
 
         this.getChartState = () => attrs;
+
+        //(x,y) for the node position
+        //(x1,y1) for the add btn position
+        //(x2,y3) for the remove btn position
         this.orientations = {
             "top-to-bottom": {
                 size: [attrs.svgWidth, attrs.svgHeight],
@@ -58,15 +62,18 @@ class OrgTree {
                 },
                 y: function (d) {
                     return d.y;
-                }
-            },
-            "right-to-left": {
-                size: [attrs.svgHeight, attrs.svgWidth],
-                x: function (d) {
-                    return attrs.svgWidth - d.y;
                 },
-                y: function (d) {
-                    return d.x;
+                x1: function (d) {
+                    return 0
+                },
+                y1: function (d) {
+                    return d.height / 2
+                },
+                x2: function (d) {
+                    return d.width / 2
+                },
+                y2: function (d) {
+                    return 0
                 }
             },
             "bottom-to-top": {
@@ -76,6 +83,39 @@ class OrgTree {
                 },
                 y: function (d) {
                     return attrs.svgHeight - d.y;
+                },
+                x1: function (d) {
+                    return 0
+                },
+                y1: function (d) {
+                    return -d.width / 4
+                },
+                x2: function (d) {
+                    return d.width / 2
+                },
+                y2: function (d) {
+                    return 0
+                }
+            },
+            "right-to-left": {
+                size: [attrs.svgHeight, attrs.svgWidth],
+                x: function (d) {
+                    return attrs.svgWidth - d.y;
+                },
+                y: function (d) {
+                    return d.x;
+                },
+                x1: function (d) {
+                    return -d.width / 2
+                },
+                y1: function (d) {
+                    return 0
+                },
+                x2: function (d) {
+                    return 0
+                },
+                y2: function (d) {
+                    return d.height / 2
                 }
             },
             "left-to-right": {
@@ -85,20 +125,29 @@ class OrgTree {
                 },
                 y: function (d) {
                     return d.x;
+                },
+                x1: function (d) {
+                    return d.width / 2
+                },
+                y1: function (d) {
+                    return 0
+                },
+                x2: function (d) {
+                    return 0
+                },
+                y2: function (d) {
+                    return d.height / 2
                 }
             }
         }
 
-        // 为Chart类动态设置getter/setter函数
+        //make properties functional and chaining call
         Object.keys(attrs).forEach((key) => {
-            //@ts-ignore
-            this[key] = function (_) {
-                var string = `attrs['${key}'] = _`;
-                if (!arguments.length) {
-                    return eval(`attrs['${key}'];`);
-                }
-                eval(string);
-                return this;
+            this[key] = (args) => {
+                ((_) => {
+                    return attrs[key] = _
+                })(args)
+                return this
             };
         });
 
@@ -194,7 +243,7 @@ class OrgTree {
         calc.nodeMaxHeight = d3.max(attrs.data, ({height}) => height);
 
         // Calculate max node depth (it's needed for layout heights calculation)
-        attrs.depth = calc.nodeMaxWidth + 100;
+        attrs.depth = ['top-to-bottom', 'bottom-to-top'].includes(attrs.orientation) > 0 ? (calc.nodeMaxHeight + 100) : (calc.nodeMaxWidth + 100);
         calc.centerX = calc.chartWidth / 2;
         calc.centerY = calc.chartHeight / 2;
 
@@ -206,12 +255,12 @@ class OrgTree {
 
         // Generate tree layout function
         layouts.treemap = d3.tree().size([calc.chartWidth, calc.chartHeight])
-            .nodeSize([calc.nodeMaxWidth, calc.nodeMaxHeight])
+            .nodeSize([calc.nodeMaxWidth + 100, calc.nodeMaxHeight])
 
         // ******************* BEHAVIORS . **********************
         const behaviors = {zoom: null}
 
-        // Get zooming function 
+        // Get zooming function
         behaviors.zoom = d3.zoom()
             .scaleExtent([0.4, 4])
             .on('zoom', () => {
@@ -281,7 +330,7 @@ class OrgTree {
             tag: 'g',
             selector: 'center-group'
         })
-            .attr('transform', `translate(${calc.nodeMaxWidth},${calc.centerY}) scale(${attrs.initialZoom})`);
+            .attr('transform', `translate(${calc.centerX},${calc.centerY}) scale(${attrs.initialZoom})`);
 
         attrs.chart = chart;
 
@@ -307,13 +356,13 @@ class OrgTree {
         //  Assigns the x and y position for the nodes
         const treeData = attrs.layouts.treemap(attrs.root);
 
-        // Get tree nodes and links and attach some properties 
+        // Get tree nodes and links and attach some properties
         const nodes = treeData.descendants()
             .map(d => {
                 // If at least one property is already set, then we don't want to reset other properties
                 if (d.width) return d;
 
-                // Declare properties with deffault values
+                // Declare properties with default values
                 let imageWidth = 100;
                 let imageHeight = 100;
                 let imageBorderColor = 'steelblue';
@@ -354,7 +403,9 @@ class OrgTree {
         const links = treeData.descendants().slice(1);
 
         // Set constant depth for each nodes
-        nodes.forEach(d => d.y = d.depth * attrs.depth);
+        nodes.forEach(d => {
+            d.y = d.depth * attrs.depth
+        });
 
         // --------------------------  LINKS ----------------------
         // Get links selection
@@ -417,20 +468,27 @@ class OrgTree {
 
         // Enter any new nodes at the parent's previous position.
         const nodeEnter = nodesSelection.enter().append('g')
-            .attr('class', 'node')
+            .attr('class', d => {
+                return attrs.current === d.id ? 'node current' : 'node'
+            })
             .attr('id', d => d.id)
             .attr("transform", d => `translate(${x0},${y0})`)
             .attr('cursor', 'pointer')
             .on('click', ({data}) => {
-                if ([...d3.event.srcElement.classList].includes('node-button-circle') || [...d3.event.srcElement.classList].includes('node-button-circle2') || [...d3.event.srcElement.classList].includes('node-button-circle3')) {
+                if ([...d3.event.srcElement.classList].includes('node-expand-button-circle') || [...d3.event.srcElement.classList].includes('node-add-button-circle') || [...d3.event.srcElement.classList].includes('node-remove-button-circle')) {
                     return;
                 }
                 attrs.current = data.nodeId
-                d3.selectAll('g.node > .node-rect')
+
+                //remove the previous current node style
+                d3.selectAll('g.node.current > .node-rect')
                     .attr('stroke-width', ({data}) => data.borderWidth || attrs.strokeWidth)
                     .attr('stroke', ({borderColor}) => borderColor)
                     .style("fill", ({backgroundColor}) => backgroundColor)
+                d3.selectAll('g.node.current').node().classList.remove("current")
 
+                //add the target node current style
+                d3.select('#' + data.nodeId).node().classList.add("current")
                 d3.select('#' + data.nodeId + ' > .node-rect')
                     .attr('stroke-width', attrs['highlight']['borderWidth'] || attrs['highlight']['strokeWidth'])
                     .attr('stroke', this.rgbaObjToColor(attrs['highlight']['borderColor']))
@@ -438,7 +496,7 @@ class OrgTree {
                 attrs.onNodeClick(data.nodeId);
             });
 
-        // Add background rectangle for the nodes 
+        // Add background rectangle for the nodes
         nodeEnter
             .patternify({tag: 'rect', selector: 'node-rect', data: d => [d]})
 
@@ -446,81 +504,70 @@ class OrgTree {
         const nodeUpdate = nodeEnter.merge(nodesSelection)
             .style('font', '12px sans-serif');
 
-
         // Add foreignObject element inside rectangle
         const fo = nodeUpdate
             .patternify({
                 tag: 'foreignObject', selector: 'node-foreign-object', data: d => [d]
             })
 
-        // Add foreign object 
+        // Add foreign object
         fo.patternify({
             tag: 'xhtml:div', selector: 'node-foreign-object-div', data: d => [d]
         })
 
         this.restyleForeignObjectElements();
 
-        const nodeButtonGroups = nodeEnter
+        const nodeExpandButtonGroups = nodeEnter
             .patternify({
-                tag: 'g', selector: 'node-button-g', data: d => [d]
+                tag: 'g', selector: 'node-expand-button-g', data: d => [d]
             })
             .on('click', d => this.onButtonClick(d))
-
-        // Add expand collapse button circle 
-        nodeButtonGroups
+        nodeExpandButtonGroups
             .patternify({
-                tag: 'circle', selector: 'node-button-circle', data: d => [d]
+                tag: 'circle', selector: 'node-expand-button-circle', data: d => [d]
             })
-
-        // Add button text 
-        nodeButtonGroups
+        nodeExpandButtonGroups
             .patternify({
-                tag: 'text', selector: 'node-button-text', data: d => [d]
+                tag: 'text', selector: 'node-expand-button-text', data: d => [d]
             })
             .attr('pointer-events', 'none')
 
 
-        const nodeButtonGroups2 = nodeEnter
+        const nodeAddButtonGroups = nodeEnter
             .patternify({
-                tag: 'g', selector: 'node-button-g2', data: d => [d]
+                tag: 'g', selector: 'node-add-button-g', data: d => [d]
             })
             .on('click', d => {
                 attrs.onNodeAdd(d.id);
             })
-
-        // Add expand collapse button circle
-        nodeButtonGroups2
+        nodeAddButtonGroups
             .patternify({
-                tag: 'circle', selector: 'node-button-circle2', data: d => [d]
+                tag: 'circle', selector: 'node-add-button-circle', data: d => [d]
             })
-
-        // Add button text
-        nodeButtonGroups2
+        nodeAddButtonGroups
             .patternify({
-                tag: 'text', selector: 'node-button-text2', data: d => [d]
+                tag: 'text', selector: 'node-add-button-text', data: d => [d]
             })
             .attr('pointer-events', 'none')
 
-        const nodeButtonGroups3 = nodeEnter
+
+        const nodeRemoveButtonGroups = nodeEnter
             .patternify({
-                tag: 'g', selector: 'node-button-g3', data: d => [d]
+                tag: 'g', selector: 'node-remove-button-g', data: d => [d]
             })
             .on('click', d => {
                 attrs.onNodeRemove(d.id);
             })
-
-        // Add expand collapse button circle
-        nodeButtonGroups3
+        nodeRemoveButtonGroups
             .patternify({
-                tag: 'circle', selector: 'node-button-circle3', data: d => [d]
+                tag: 'circle', selector: 'node-remove-button-circle', data: d => [d]
             })
-
-        // Add button text
-        nodeButtonGroups3
+        nodeRemoveButtonGroups
             .patternify({
-                tag: 'text', selector: 'node-button-text3', data: d => [d]
+                tag: 'text', selector: 'node-remove-button-text', data: d => [d]
             })
             .attr('pointer-events', 'none')
+
 
         // Transition to the proper position for the node
         nodeUpdate.transition()
@@ -545,7 +592,7 @@ class OrgTree {
             .style("fill", ({data, backgroundColor}) => data.nodeId === attrs.current ? this.rgbaObjToColor(attrs['highlight']['backgroundColor']) : backgroundColor)
 
         /*// Move node button group to the desired position
-        nodeUpdate.select('.node-button-g')
+        nodeUpdate.select('.node-expand-button-g')
             .attr('transform', ({data}) => `translate(${-data.width / 2},0)`)
             .attr('opacity', ({children, _children}) => {
                 if (children || _children) {
@@ -553,16 +600,12 @@ class OrgTree {
                 }
                 return 0;
             })
-
-        // Restyle node button circle
-        nodeUpdate.select('.node-button-circle')
+        nodeUpdate.select('.node-expand-button-circle')
             .attr('r', 16)
             .attr('stroke-width', ({data}) => data.borderWidth || attrs.strokeWidth)
             .attr('fill', attrs.backgroundColor)
             .attr('stroke', ({borderColor}) => borderColor)
-
-        // Restyle button texts
-        nodeUpdate.select('.node-button-text')
+        nodeUpdate.select('.node-expand-button-text')
             .attr('text-anchor', 'middle')
             .attr('alignment-baseline', 'middle')
             .attr('fill', attrs.defaultTextFill)
@@ -578,24 +621,20 @@ class OrgTree {
 
 
         // Move node button group to the desired position
-        nodeUpdate.select('.node-button-g2')
-            .attr('transform', ({data}) => `translate(${-data.width / 2},0)`)
+        nodeUpdate.select('.node-add-button-g')
+            .attr('transform', ({data}) => 'translate(' + this.orientations[attrs.orientation].x1(data) + ',' + this.orientations[attrs.orientation].y1(data) + ')')
             .attr('display', ({data}) => {
                 if (data.added) {
                     return "block";
                 }
                 return "none";
             })
-
-        // Restyle node button circle
-        nodeUpdate.select('.node-button-circle2')
+        nodeUpdate.select('.node-add-button-circle')
             .attr('r', 16)
             .attr('stroke-width', ({data}) => data.borderWidth || attrs.strokeWidth)
             .attr('fill', attrs.backgroundColor)
             .attr('stroke', ({borderColor}) => borderColor)
-
-        // Restyle button texts
-        nodeUpdate.select('.node-button-text2')
+        nodeUpdate.select('.node-add-button-text')
             .attr('text-anchor', 'middle')
             .attr('alignment-baseline', 'middle')
             .attr('fill', attrs.defaultTextFill)
@@ -610,24 +649,20 @@ class OrgTree {
 
 
         // Move node button group to the desired position
-        nodeUpdate.select('.node-button-g3')
-            .attr('transform', ({data}) => `translate(0,${data.height / 2})`)
+        nodeUpdate.select('.node-remove-button-g')
+            .attr('transform', ({data}) => 'translate(' + this.orientations[attrs.orientation].x2(data) + ',' + this.orientations[attrs.orientation].y2(data) + ')')
             .attr('display', ({data}) => {
                 if (data.removed) {
                     return "block";
                 }
                 return "none";
             })
-
-        // Restyle node button circle
-        nodeUpdate.select('.node-button-circle3')
+        nodeUpdate.select('.node-remove-button-circle')
             .attr('r', 16)
             .attr('stroke-width', ({data}) => data.borderWidth || attrs.strokeWidth)
             .attr('fill', attrs.backgroundColor)
             .attr('stroke', ({borderColor}) => borderColor)
-
-        // Restyle button texts
-        nodeUpdate.select('.node-button-text3')
+        nodeUpdate.select('.node-remove-button-text')
             .attr('text-anchor', 'middle')
             .attr('alignment-baseline', 'middle')
             .attr('fill', attrs.defaultTextFill)
