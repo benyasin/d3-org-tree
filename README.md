@@ -12,7 +12,9 @@
 
 <br>
 
-<img src="https://user-images.githubusercontent.com/1866848/87683987-4f7f3980-c7b4-11ea-884b-20a3ccd3717c.gif" align="left" width="800px">
+<img src="https://user-images.githubusercontent.com/1866848/87683987-4f7f3980-c7b4-11ea-884b-20a3ccd3717c.gif" align="left" width="800px"/>
+
+<br>
 
 ## Installing
 
