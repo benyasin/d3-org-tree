@@ -69,6 +69,23 @@ orgTree.container('body') //dom element
     "expanded": true,
     "added": false,
     "removed": false
+  },
+  {
+    "nodeId": "O-2",
+    "parentNodeId": "O-1",
+    "width": 319,
+    "height": 134,
+    "borderWidth": 1,
+    "borderRadius": 15,
+    "borderColor": {"red": 50,"green": 255,"blue": 30,"alpha": 1},
+    "backgroundColor": {"red": 20,"green": 100,"blue": 40,"alpha": 1},
+    "template": "<div>\n <div style=\"margin-left:10px;\n margin-top:35px;\n font-size:40px;\n font-weight:bold;\n\">Honey</div></div>",
+    "connectorLineColor": {"red": 11,"green": 123, "blue": 108, "alpha": 1},
+    "connectorLineWidth": 5,
+    "dashArray": "",
+    "expanded": true,
+    "added": true,
+    "removed": true
   }]
 ```
 ## API
