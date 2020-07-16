@@ -12,7 +12,7 @@
 
 <br>
 
-<img src="https://user-images.githubusercontent.com/1866848/87683987-4f7f3980-c7b4-11ea-884b-20a3ccd3717c.gif" align="left" width="800px"/>
+![tree](https://user-images.githubusercontent.com/1866848/87697076-3da59280-c7c4-11ea-830c-91f3727067ec.png)
 
 <br>
 
@@ -110,3 +110,9 @@ orgTree.container('body') //dom element
 0.0.1 Changes:
 
 * The initial version first publish to npm library
+
+## Contributing
+
+If the existing component doesn't meet your needs, fork the project, implement the future and an example using it, send us a pull request, for consideration for inclusion in the project.
+
+If you'd like to contribute consistently, show me what you've got with some good pull requests!
