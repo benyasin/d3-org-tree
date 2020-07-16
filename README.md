@@ -12,7 +12,7 @@
 
 <br>
 
-![tree](https://user-images.githubusercontent.com/1866848/87683987-4f7f3980-c7b4-11ea-884b-20a3ccd3717c.gif)
+<img src="https://user-images.githubusercontent.com/1866848/87683987-4f7f3980-c7b4-11ea-884b-20a3ccd3717c.gif" align="left" width="800px">
 
 ## Installing
 
@@ -51,7 +51,7 @@ orgTree.container('body') //dom element
        .render()
 ```
 
-**data json structure**:
+**data example**:
 ```json
 [{
     "nodeId": "O-1",
