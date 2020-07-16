@@ -17,9 +17,6 @@ class OrgTree {
             marginRight: 0,
             marginLeft: 0,
             container: 'body',
-            defaultTextFill: '#2C3E50',
-            nodeTextFill: 'white',
-            defaultFont: 'Helvetica',
             backgroundColor: '#fafafa',
             data: null,
             highlight: {
@@ -39,7 +36,7 @@ class OrgTree {
                 }
             },
             current: null,
-            depth: 180,
+            depth: 100,
             duration: 600,
             strokeWidth: 3,
             initialZoom: 1,
@@ -243,7 +240,7 @@ class OrgTree {
         calc.nodeMaxHeight = d3.max(attrs.data, ({height}) => height);
 
         // Calculate max node depth (it's needed for layout heights calculation)
-        attrs.depth = ['top-to-bottom', 'bottom-to-top'].includes(attrs.orientation) > 0 ? (calc.nodeMaxHeight + 100) : (calc.nodeMaxWidth + 100);
+        //attrs.depth = ['top-to-bottom', 'bottom-to-top'].includes(attrs.orientation) > 0 ? (calc.nodeMaxHeight + 100) : (calc.nodeMaxWidth + 100);
         calc.centerX = calc.chartWidth / 2;
         calc.centerY = calc.chartHeight / 2;
 
@@ -310,7 +307,6 @@ class OrgTree {
             })
             .attr('width', attrs.svgWidth)
             .attr('height', attrs.svgHeight)
-            .attr('font-family', attrs.defaultFont)
             .call(behaviors.zoom)
             .attr('cursor', 'move')
             .style('background-color', attrs.backgroundColor);
@@ -608,7 +604,6 @@ class OrgTree {
         nodeUpdate.select('.node-expand-button-text')
             .attr('text-anchor', 'middle')
             .attr('alignment-baseline', 'middle')
-            .attr('fill', attrs.defaultTextFill)
             .attr('font-size', ({children}) => {
                 if (children) return 40;
                 return 26;
@@ -637,7 +632,6 @@ class OrgTree {
         nodeUpdate.select('.node-add-button-text')
             .attr('text-anchor', 'middle')
             .attr('alignment-baseline', 'middle')
-            .attr('fill', attrs.defaultTextFill)
             .attr('font-size', ({children}) => {
                 if (children) return 40;
                 return 26;
@@ -665,7 +659,6 @@ class OrgTree {
         nodeUpdate.select('.node-remove-button-text')
             .attr('text-anchor', 'middle')
             .attr('alignment-baseline', 'middle')
-            .attr('fill', attrs.defaultTextFill)
             .attr('font-size', ({children}) => {
                 if (children) return 40;
                 return 26;
