@@ -1,6 +1,6 @@
 {
   "name": "d3-org-tree",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Organization tree, created with d3",
   "main": "index.js",
   "scripts": {
