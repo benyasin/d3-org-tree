@@ -112,6 +112,7 @@ orgTree.container('body') //dom element
 
 |  Callback  | Usage |
 |  --- | --- |
+|  transformLayout(orientation)  | `function`, change the the layout orientation, the passed value can be `left-to-right`、`right-to-left`、`top-to-bottom`、`bottom-to-top` |
 |  addNode(nodeJson)  | `function`, add a children node under a parent node you clicked |
 |  removeNode(nodeId)  | `function`, remove a node by the nodeId |
 
