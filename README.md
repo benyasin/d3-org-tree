@@ -14,6 +14,11 @@
 
 ![tree](https://user-images.githubusercontent.com/1866848/87697076-3da59280-c7c4-11ea-830c-91f3727067ec.png)
 
+
+## Demo
+
+* <a target="_blank" href="https://github.com/benyasin/d3-org-tree-vue-demo">Vue integration demo</a>
+
 ## Installing
 
 ```
@@ -118,9 +123,14 @@ orgTree.container('body') //dom element
 
 ## Changelog
 
+**0.0.3** Changes:
+
+* Fixed node distance bug
+* Added a vue integrated demo
+
 **0.0.2** Changes:
 
-* Add layout orientation support
+* Added layout orientation support
 * Completed documentation
 
 **0.0.1** Changes:
