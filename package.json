@@ -1,8 +1,9 @@
 {
   "name": "d3-org-tree",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A highly customizable org tree built with d3.js v5",
   "main": "index.js",
+  "publishConfig": { "registry": "https://npm.pkg.github.com/" },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -13,7 +14,8 @@
   "keywords": [
     "d3",
     "org-tree",
-    "hierarchy"
+    "hierarchy",
+    "customizable"
   ],
   "dependencies": {
     "d3": "*"
