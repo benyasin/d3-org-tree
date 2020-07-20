@@ -12,7 +12,7 @@
 
 <br/>
 
-![tree](https://user-images.githubusercontent.com/1866848/87697076-3da59280-c7c4-11ea-830c-91f3727067ec.png)
+![tree](https://user-images.githubusercontent.com/1866848/87916163-ac753b00-caa5-11ea-936e-6243740f5cd5.png)
 
 
 ## Demo
@@ -58,40 +58,54 @@ orgTree.container('body') //dom element
 
 **data example**:
 ```json
-[{
-    "nodeId": "O-1",
-    "parentNodeId": null,
-    "width": 325,
-    "height": 139,
-    "borderWidth": 1,
-    "borderRadius": 15,
-    "borderColor": {"red": 50,"green": 255,"blue": 30,"alpha": 1},
-    "backgroundColor": {"red": 20,"green": 100,"blue": 40,"alpha": 1},
-    "template": "<div>\n <div style=\"margin-left:10px;\n margin-top:35px;\n font-size:40px;\n font-weight:bold;\n\">Ben</div></div>",
-    "connectorLineColor": {"red": 11,"green": 123, "blue": 108, "alpha": 1},
-    "connectorLineWidth": 5,
-    "dashArray": "",
-    "expanded": true,
-    "added": false,
-    "removed": false
-  },
-  {
-    "nodeId": "O-2",
-    "parentNodeId": "O-1",
-    "width": 319,
-    "height": 134,
-    "borderWidth": 1,
-    "borderRadius": 15,
-    "borderColor": {"red": 50,"green": 255,"blue": 30,"alpha": 1},
-    "backgroundColor": {"red": 20,"green": 100,"blue": 40,"alpha": 1},
-    "template": "<div>\n <div style=\"margin-left:10px;\n margin-top:35px;\n font-size:40px;\n font-weight:bold;\n\">Honey</div></div>",
-    "connectorLineColor": {"red": 11,"green": 123, "blue": 108, "alpha": 1},
-    "connectorLineWidth": 5,
-    "dashArray": "",
-    "expanded": true,
-    "added": true,
-    "removed": true
-  }]
+[  {
+     "nodeId": "O-1",
+     "parentNodeId": null,
+     "width": 325,
+     "height": 139,
+     "borderWidth": 1,
+     "borderRadius": 15,
+     "borderColor": {
+       "red": 15,
+       "green": 140,
+       "blue": 121,
+       "alpha": 0.5
+     },
+     "backgroundColor": {
+       "red": 0,
+       "green": 81,
+       "blue": 90,
+       "alpha": 0.5
+     },
+     "template": "<div class=\"domStyle\">\n<span>Ben</span></div>",
+     "expanded": true,
+     "added": false,
+     "removed": false
+   },
+   {
+     "nodeId": "O-2",
+     "parentNodeId": "O-1",
+     "width": 319,
+     "height": 134,
+     "borderWidth": 1,
+     "borderRadius": 15,
+     "borderColor": {
+       "red": 15,
+       "green": 140,
+       "blue": 121,
+       "alpha": 0.5
+     },
+     "backgroundColor": {
+       "red": 0,
+       "green": 81,
+       "blue": 90,
+       "alpha": 0.5
+     },
+     "template": "<div class=\"domStyle\"><span>Honey</span></div>",
+     "expanded": true,
+     "added": true,
+     "removed": false
+   }]
 ```
 ## API
             
@@ -118,10 +132,16 @@ orgTree.container('body') //dom element
 |  Callback  | Usage |
 |  --- | --- |
 |  transformLayout(orientation)  | `function`, change the the layout orientation, the passed value can be `left-to-right`、`right-to-left`、`top-to-bottom`、`bottom-to-top` |
+|  toggleArrow(display)  | `function`, toggle visibility of link arrow, default value is `false` |
 |  addNode(nodeJson)  | `function`, add a children node under a parent node you clicked |
 |  removeNode(nodeId)  | `function`, remove a node by the nodeId |
 
 ## Changelog
+
+**0.0.4** Changes:
+
+* Added control for arrows visibility
+* optimized link position
 
 **0.0.3** Changes:
 

@@ -38,6 +38,14 @@ class OrgTree {
                     "alpha": 1
                 }
             },
+            linkColor: {
+                "red": 11,
+                "green": 123,
+                "blue": 108,
+                "alpha": 1
+            },
+            linkWidth: 5,
+            displayArrow: false,
             current: null,
             depth: 180,
             duration: 600,
@@ -54,6 +62,7 @@ class OrgTree {
         //(x,y) for the node position
         //(x1,y1) for the add btn position
         //(x2,y3) for the remove btn position
+        //(from,to) for the link position
         this.orientations = {
             "top-to-bottom": {
                 size: [attrs.svgWidth, attrs.svgHeight],
@@ -74,6 +83,12 @@ class OrgTree {
                 },
                 y2: function (d) {
                     return 0
+                },
+                from: function (d) {
+                    return {x: d.x, y: d.y - d.height / 2}
+                },
+                to: function (d) {
+                    return {x: d.parent.x, y: d.parent.y + d.parent.height / 2}
                 }
             },
             "bottom-to-top": {
@@ -95,6 +110,12 @@ class OrgTree {
                 },
                 y2: function (d) {
                     return 0
+                },
+                from: function (d) {
+                    return {x: d.x, y: d.y - d.height / 2}
+                },
+                to: function (d) {
+                    return {x: d.parent.x, y: d.parent.y + d.parent.height / 2}
                 }
             },
             "right-to-left": {
@@ -116,6 +137,12 @@ class OrgTree {
                 },
                 y2: function (d) {
                     return d.height / 2
+                },
+                from: function (d) {
+                    return {x: d.x, y: d.y - d.width / 2}
+                },
+                to: function (d) {
+                    return {x: d.parent.x, y: d.parent.y + d.parent.width / 2}
                 }
             },
             "left-to-right": {
@@ -137,6 +164,12 @@ class OrgTree {
                 },
                 y2: function (d) {
                     return d.height / 2
+                },
+                from: function (d) {
+                    return {x: d.x, y: d.y - d.width / 2}
+                },
+                to: function (d) {
+                    return {x: d.parent.x, y: d.parent.y + d.parent.width / 2}
                 }
             }
         }
@@ -214,6 +247,15 @@ class OrgTree {
     render() {
         const attrs = this.getChartState();
         const thisObjRef = this;
+
+        // Define the arrowhead marker variables
+        const markerBoxWidth = 4;
+        const markerBoxHeight = 4;
+        const refX = markerBoxWidth / 2;
+        const refY = markerBoxHeight / 2;
+        const markerWidth = markerBoxWidth / 2;
+        const markerHeight = markerBoxHeight / 2;
+        const arrowPoints = [[0, 0], [4, 2], [0, 4],];
 
         //Drawing containers
         const container = d3.select(attrs.container);
@@ -316,6 +358,21 @@ class OrgTree {
             .style('background-color', attrs.backgroundColor);
 
         attrs.svg = svg;
+
+        // Add the arrowhead marker definition to the svg element
+        svg
+            .append('defs')
+            .append('marker')
+            .attr('id', 'arrow')
+            .attr('viewBox', [-markerBoxWidth / 2, -markerBoxHeight / 2, markerBoxWidth, markerBoxHeight])
+            .attr('refX', 0)
+            .attr('refY', 0)
+            .attr('markerWidth', markerBoxWidth)
+            .attr('markerHeight', markerBoxHeight)
+            .attr('orient', 'auto-start-reverse')
+            .append('path')
+            .attr('d', 'M 0,0 m -2,-2 L 2,0 L -2,2 Z')
+            .attr('fill', () => this.rgbaObjToColor(attrs.linkColor) || 'green')
 
         //Add container g element
         const chart = svg
@@ -429,25 +486,19 @@ class OrgTree {
 
         // Styling links
         linkUpdate
+            .attr('marker-start', () => {
+                return attrs.displayArrow ? 'url(#arrow)' : ''
+            })
             .attr("fill", "none")
-            .attr("stroke-width", ({data}) => data.connectorLineWidth || 2)
-            .attr('stroke', ({data}) => {
-                if (data.connectorLineColor) {
-                    return this.rgbaObjToColor(data.connectorLineColor);
-                }
-                return 'green';
-            })
-            .attr('stroke-dasharray', ({data}) => {
-                if (data.dashArray) {
-                    return data.dashArray;
-                }
-                return '';
-            })
+            .attr("stroke-width", () => attrs.linkWidth || 2)
+            .attr('stroke', () => this.rgbaObjToColor(attrs.linkColor) || 'green')
 
         // Transition back to the parent element position
         linkUpdate.transition()
             .duration(attrs.duration)
-            .attr('d', d => this.diagonal(d, d.parent));
+            .attr('d', d => {
+                return this.diagonal(this.orientations[attrs.orientation].from(d), this.orientations[attrs.orientation].to(d))
+            });
 
         // Remove any  links which is exiting after animation
         const linkExit = linkSelection.exit().transition()
@@ -478,15 +529,18 @@ class OrgTree {
                 if ([...d3.event.srcElement.classList].includes('node-expand-button-circle') || [...d3.event.srcElement.classList].includes('node-add-button-circle') || [...d3.event.srcElement.classList].includes('node-remove-button-circle')) {
                     return;
                 }
-                attrs.current = data.nodeId
 
                 //remove the previous current node style
                 d3.selectAll('g.node.current > .node-rect')
                     .attr('stroke-width', ({data}) => data.borderWidth || attrs.strokeWidth)
                     .attr('stroke', ({borderColor}) => borderColor)
                     .style("fill", ({backgroundColor}) => backgroundColor)
-                d3.selectAll('g.node.current').node().classList.remove("current")
 
+                if (attrs.current) {
+                    d3.selectAll('g.node.current').node().classList.remove("current")
+                }
+
+                attrs.current = data.nodeId
                 //add the target node current style
                 d3.select('#' + data.nodeId).node().classList.add("current")
                 d3.select('#' + data.nodeId + ' > .node-rect')
@@ -517,6 +571,7 @@ class OrgTree {
 
         this.restyleForeignObjectElements();
 
+        //add button for expand/collapse children nodes
         const nodeExpandButtonGroups = nodeEnter
             .patternify({
                 tag: 'g', selector: 'node-expand-button-g', data: d => [d]
@@ -533,6 +588,7 @@ class OrgTree {
             .attr('pointer-events', 'none')
 
 
+        //add button for add children node
         const nodeAddButtonGroups = nodeEnter
             .patternify({
                 tag: 'g', selector: 'node-add-button-g', data: d => [d]
@@ -551,6 +607,7 @@ class OrgTree {
             .attr('pointer-events', 'none')
 
 
+        //add button for remove one node
         const nodeRemoveButtonGroups = nodeEnter
             .patternify({
                 tag: 'g', selector: 'node-remove-button-g', data: d => [d]
@@ -729,9 +786,14 @@ class OrgTree {
     }
 
     transformLayout(orientation) {
-        console.log(orientation)
         const attrs = this.getChartState();
         attrs.orientation = orientation
+        this.update(attrs.root)
+    }
+
+    toggleArrow(displayArrow) {
+        const attrs = this.getChartState();
+        attrs.displayArrow = displayArrow
         this.update(attrs.root)
     }
 
