@@ -119,7 +119,7 @@ orgTree.container('body') //dom element
 |  current  | `string`, mark the current chosen node |
 |  duration  | `number`, the transition duration, the default value is `600` |
 |  strokeWidth  | `number`, the stroke width of node, the default value is `3` |
-|  linkColor  | `object`, the rgb color object of link, the default value is `3` |
+|  linkColor  | `object`, the rgba color object of link, the default value is `3` |
 |  linkWidth  | `number`, the stroke width of link, the default value is `5` |
 |  initialZoom  | `number`, the initial zoom scale, the default value is `1` |
 |  orientation  | `string`, the layout orientation, which value is one of `left-to-right`、`right-to-left`、`top-to-bottom`、`bottom-to-top`, and the default one is `right-to-left` |
