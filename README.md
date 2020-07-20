@@ -12,8 +12,7 @@
 
 <br/>
 
-![tree](https://user-images.githubusercontent.com/1866848/87916163-ac753b00-caa5-11ea-936e-6243740f5cd5.png)
-
+![tree](https://user-images.githubusercontent.com/1866848/87917516-b009c180-caa7-11ea-9fce-0793b6e6ec0c.png)
 
 ## Demo
 
