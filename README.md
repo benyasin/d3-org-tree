@@ -34,13 +34,13 @@ orgTree.container('body') //dom element
        .data(/**{}*/)     //data json array, example as below
        .svgWidth(800)
        .svgHeight(600)
-       .initialZoom(.4)
        .highlight({
             "borderWidth": 1,
             "borderRadius": 15,
             "borderColor": {"red": 50,"green": 255,"blue": 30,"alpha": 1},
             "backgroundColor": {"red": 20,"green": 100,"blue": 40,"alpha": 1}
         })
+       .initialZoom(.3)
        .onNodeClick(d => {
             console.log(d + " node clicked")
         })
@@ -123,6 +123,8 @@ orgTree.container('body') //dom element
 |  linkWidth  | `number`, the stroke width of link, the default value is `5` |
 |  initialZoom  | `number`, the initial zoom scale, the default value is `1` |
 |  orientation  | `string`, the layout orientation, which value is one of `left-to-right`、`right-to-left`、`top-to-bottom`、`bottom-to-top`, and the default one is `right-to-left` |
+|  displayArrow  | `boolean`, show the link arrow, the default value is `true` |
+|  straightLink  | `boolean`, display the link with straight line, the default value is `false`, transform it to curve line when set the property to `true`|
 
 |  Method  | Usage |
 |  --- | --- |
@@ -133,11 +135,17 @@ orgTree.container('body') //dom element
 |  Callback  | Usage |
 |  --- | --- |
 |  transformLayout(orientation)  | `function`, change the the layout orientation, the passed value can be `left-to-right`、`right-to-left`、`top-to-bottom`、`bottom-to-top` |
+|  transformStraightLink(straightLink)  | `function`, change the the link style to straight line, the passed value can be `false`、`true` |
 |  toggleArrow(display)  | `function`, toggle visibility of link arrow, default value is `false` |
 |  addNode(nodeJson)  | `function`, add a children node under a parent node you clicked |
 |  removeNode(nodeId)  | `function`, remove a node by the nodeId |
 
 ## Changelog
+
+**0.0.5** Changes:
+
+* Added function for transform link line style
+* Set default link style as curve line
 
 **0.0.4** Changes:
 

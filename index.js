@@ -46,6 +46,7 @@ class OrgTree {
             },
             linkWidth: 5,
             displayArrow: false,
+            straightLink: false,
             current: null,
             depth: 180,
             duration: 600,
@@ -63,6 +64,8 @@ class OrgTree {
         //(x1,y1) for the add btn position
         //(x2,y3) for the remove btn position
         //(from,to) for the link position
+        //diagonal for curve link style
+        //diagonal2 for straight link style
         this.orientations = {
             "top-to-bottom": {
                 size: [attrs.svgWidth, attrs.svgHeight],
@@ -89,6 +92,18 @@ class OrgTree {
                 },
                 to: function (d) {
                     return {x: d.parent.x, y: d.parent.y + d.parent.height / 2}
+                },
+                diagonal: function (s, t) {
+                    return `M ${s.x} ${s.y}
+                            C ${s.x} ${(s.y + t.y) / 2} ,
+                              ${t.x} ${(s.y + t.y) / 2} ,
+                              ${t.x} ${t.y}`
+                },
+                diagonal2: function (s, t) {
+                    return `M ${s.x} ${s.y}
+                            C ${s.x} ${s.y} ,
+                              ${t.x} ${t.y} ,
+                              ${t.x} ${t.y}`
                 }
             },
             "bottom-to-top": {
@@ -116,6 +131,18 @@ class OrgTree {
                 },
                 to: function (d) {
                     return {x: d.parent.x, y: d.parent.y + d.parent.height / 2}
+                },
+                diagonal: function (s, t) {
+                    return `M ${s.x} ${attrs.svgHeight - s.y}
+                            C ${s.x} ${attrs.svgHeight - (s.y + t.y) / 2} ,
+                              ${t.x} ${attrs.svgHeight - (s.y + t.y) / 2} ,
+                              ${t.x} ${attrs.svgHeight - t.y}`
+                },
+                diagonal2: function (s, t) {
+                    return `M ${s.x} ${attrs.svgHeight - s.y}
+                            C ${s.x} ${attrs.svgHeight - s.y} ,
+                              ${t.x} ${attrs.svgHeight - t.y} ,
+                              ${t.x} ${attrs.svgHeight - t.y}`
                 }
             },
             "right-to-left": {
@@ -143,6 +170,18 @@ class OrgTree {
                 },
                 to: function (d) {
                     return {x: d.parent.x, y: d.parent.y + d.parent.width / 2}
+                },
+                diagonal: function (s, t) {
+                    return `M ${attrs.svgWidth - s.y} ${s.x}
+                             C ${attrs.svgWidth - (s.y + t.y) / 2} ${s.x},
+                               ${attrs.svgWidth - (s.y + t.y) / 2} ${t.x},
+                               ${attrs.svgWidth - t.y} ${t.x}`
+                },
+                diagonal2: function (s, t) {
+                    return `M ${attrs.svgWidth - s.y} ${s.x}
+                             C ${attrs.svgWidth - s.y} ${s.x},
+                               ${attrs.svgWidth - s.y} ${s.x},
+                               ${attrs.svgWidth - t.y} ${t.x}`
                 }
             },
             "left-to-right": {
@@ -170,6 +209,18 @@ class OrgTree {
                 },
                 to: function (d) {
                     return {x: d.parent.x, y: d.parent.y + d.parent.width / 2}
+                },
+                diagonal: function (s, t) {
+                    return `M ${s.y} ${s.x}
+                            C ${(s.y + t.y) / 2} ${s.x},
+                              ${(s.y + t.y) / 2} ${t.x},
+                              ${t.y} ${t.x}`
+                },
+                diagonal2: function (s, t) {
+                    return `M ${s.y} ${s.x}
+                            C ${s.y} ${s.x},
+                              ${t.y} ${t.x},
+                              ${t.y} ${t.x}`
                 }
             }
         }
@@ -791,6 +842,12 @@ class OrgTree {
         this.update(attrs.root)
     }
 
+    transformStraightLink(straightLink) {
+        const attrs = this.getChartState();
+        attrs.straightLink = straightLink
+        this.update(attrs.root)
+    }
+
     toggleArrow(displayArrow) {
         const attrs = this.getChartState();
         attrs.displayArrow = displayArrow
@@ -806,13 +863,12 @@ class OrgTree {
     }
 
     diagonal(s, t) {
-        const attrs = this.getChartState();
-        const calc = attrs.calc;
-        const path = `M ${this.orientations[attrs.orientation].x(s)} ${this.orientations[attrs.orientation].y(s)}
-            C ${this.orientations[attrs.orientation].x(s)} ${this.orientations[attrs.orientation].y(s)},
-              ${this.orientations[attrs.orientation].x(s)} ${this.orientations[attrs.orientation].y(s)},
-              ${this.orientations[attrs.orientation].x(t)} ${this.orientations[attrs.orientation].y(t)}`
-        return path
+        const attrs = this.getChartState()
+        if (attrs.straightLink) {
+            return this.orientations[attrs.orientation].diagonal2(s, t)
+        } else {
+            return this.orientations[attrs.orientation].diagonal(s, t)
+        }
     }
 
     restyleForeignObjectElements() {
