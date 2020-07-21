@@ -16,12 +16,12 @@ Except d3.js, it does not have any third-party dependencies.
 
 Some d3-org-tree features:
 *  custom node style, including svg and pure html dom through `template`
-*  customize the node behavior, including expand child nodes, add child nodes, and delete it
-*  customize the current node highlight style and can manually change the current node
-*  pre-set or dynamically change the layout orientation, link style, and whether to display arrows
-*  pre-set the width/height of the svg container and the margin offset of the content
-*  pre-set transform animation duration
-*  customize callback function on node `click`、`add` and `remove` event
+*  customize the node behavior, including `expand` child nodes, `add` child nodes, and `delete` it
+*  customize the current node `highlight` style and can manually change the current node
+*  pre-set or dynamically change the layout `orientation`, link style, and whether to `display arrows`
+*  pre-set the `width/height` of the svg container and the margin offset of the content
+*  pre-set transform animation `duration`
+*  customize callback function on node `click`,`add` and `remove` event
 
 ## Demo
 
