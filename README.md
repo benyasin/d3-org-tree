@@ -5,13 +5,8 @@
 
 <div style="width: 100%; height:150px; text-align:center; display:flex; flex-direction: row; justify-content: center; align-items: center;">
   <a href="javascript:void(0)" style="display:inline-block;">
-    <img src="https://user-images.githubusercontent.com/1866848/87675987-a08a3000-c7aa-11ea-93f4-6e164c3b0823.png" width="150" height="150">
+    <img src="https://user-images.githubusercontent.com/1866848/88040200-21ff0b00-cb7b-11ea-842c-b853c01fd1d2.png" width="80%">
   </a>
-  <div style="width: 60%;margin-left: 20px; height:135px; display:flex; flex-direction: column; align-items: start;justify-content: space-between;">
-    <div style="font-weight:bold; font-size: 24px;"></div>
-    <div style="font-weight:bold; font-size: 24px;">D3-ORG-TREE</div>
-    <div style="font-weight:bold; font-size: 18px;">A highly customizable tree built with d3.js v5</div>
-  </div>
 </div>
 
 ## Futures
