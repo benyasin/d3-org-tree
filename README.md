@@ -5,7 +5,7 @@
 
 <div style="width: 100%; height:150px; text-align:center; display:flex; flex-direction: row; justify-content: center; align-items: center;">
   <a href="javascript:void(0)" style="display:inline-block;">
-    <img src="https://user-images.githubusercontent.com/1866848/88040200-21ff0b00-cb7b-11ea-842c-b853c01fd1d2.png" width="80%">
+    <img src="https://user-images.githubusercontent.com/1866848/88040200-21ff0b00-cb7b-11ea-842c-b853c01fd1d2.png" width="70%">
   </a>
 </div>
 
