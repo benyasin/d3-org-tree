@@ -1,18 +1,38 @@
+<div style="width: 100%;height: 100px; display:flex; flex-direction: row; justify-content: start; align-items: center;">
+
 [![GitHub stars](https://img.shields.io/github/stars/benyasin/d3-org-tree.svg?style=flat-square)](https://github.com/benyasin/d3-org-tree/stargazers)
+
 [![GitHub issues](https://img.shields.io/github/issues/benyasin/d3-org-tree.svg?style=flat-square)](https://github.com/benyasin/d3-org-tree/issues)
+
 [![GitHub forks](https://img.shields.io/github/forks/benyasin/d3-org-tree.svg?style=flat-square)](https://github.com/benyasin/d3-org-tree/network)
+
 [![GitHub last commit](https://img.shields.io/github/last-commit/benyasin/d3-org-tree.svg?style=flat-square)](https://github.com/benyasin/d3-org-tree)
+</div>
 
-# d3-org-tree
+<div style="width: 100%; height:150px; text-align:center; display:flex; flex-direction: row; justify-content: center; align-items: center;">
+  <a href="javascript:void(0)" style="display:inline-block;">
+    <img src="https://user-images.githubusercontent.com/1866848/87675987-a08a3000-c7aa-11ea-93f4-6e164c3b0823.png" width="150" height="150">
+  </a>
+  <div style="width: 60%;margin-left: 20px; height:135px; display:flex; flex-direction: column; align-items: start;justify-content: space-between;">
+  <div style="font-weight:bold; font-size: 24px;"></div>
+  <div style="font-weight:bold; font-size: 24px;">D3-ORG-TREE</div>
+  <div style="font-weight:bold; font-size: 18px;">A highly customizable tree built with d3.js v5</div>
+  </div>
+</div>
 
+## Futures
 
-<img src="https://user-images.githubusercontent.com/1866848/87675987-a08a3000-c7aa-11ea-93f4-6e164c3b0823.png" align="left" width="80px" hspace="5" vspace="5">
+`d3-org-tree` is highly customizable tree built with d3.js v5 that can run in modern browser like `Chrome`, `Edge`, `Firefox` and `Safari`.
+Except d3.js, it does not have any third-party dependencies.
 
-#### A highly customizable org tree built with d3.js v5
-
-<br/>
-
-![tree](https://user-images.githubusercontent.com/1866848/88016824-e3575980-cb56-11ea-97d6-957750839d8c.png)
+Some d3-org-tree features:
+    * custom node style, including svg and pure html dom through `template`
+    * customize the node behavior, including expand child nodes, add child nodes, and delete it
+    * customize the current node highlight style and can manually change the current node
+    * pre-set or dynamically change the layout orientation, link style, and whether to display arrows
+    * pre-set the width/height of the svg container and the margin offset of the content
+    * pre-set transform animation duration
+    * customize callback function on node `click`、`add` and `remove` event
 
 ## Demo
 
