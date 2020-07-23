@@ -389,10 +389,12 @@ class OrgTree {
         })
 
         // Collapse all children at first
-        attrs.root.children.forEach(d => this.collapse(d));
-
         // Then expand some nodes, which have `expanded` property set
-        attrs.root.children.forEach(d => this.expandSomeNodes(d));
+        attrs.root.children && attrs.root.children.forEach(d => {
+            this.collapse(d)
+            
+            this.expandSomeNodes(d)
+        });
 
         // *************************  DRAWING **************************
         //Add svg
