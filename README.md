@@ -153,6 +153,11 @@ orgTree.container('body') //dom element
 
 ## Changelog
 
+**0.0.6** Changes:
+
+* Re-adjusted position of the add and remove buttons
+* Add expand and collapse buttons to manually show and hide sub-nodes
+
 **0.0.5** Changes:
 
 * Added function for transform link line style

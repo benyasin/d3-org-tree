@@ -62,7 +62,8 @@ class OrgTree {
 
         //(x,y) for the node position
         //(x1,y1) for the add btn position
-        //(x2,y3) for the remove btn position
+        //(x2,y2) for the remove btn position
+        //(x3,y3) for the collapse/expanded btn position
         //(from,to) for the link position
         //diagonal for curve link style
         //diagonal2 for straight link style
@@ -76,16 +77,22 @@ class OrgTree {
                     return d.y;
                 },
                 x1: function (d) {
-                    return 0
+                    return -d.width / 2
                 },
                 y1: function (d) {
-                    return d.height / 2
+                    return 0
                 },
                 x2: function (d) {
                     return d.width / 2
                 },
                 y2: function (d) {
                     return 0
+                },
+                x3: function (d) {
+                    return 0
+                },
+                y3: function (d) {
+                    return -d.height / 2
                 },
                 from: function (d) {
                     return {x: d.x, y: d.y - d.height / 2}
@@ -115,16 +122,22 @@ class OrgTree {
                     return attrs.svgHeight - d.y;
                 },
                 x1: function (d) {
-                    return 0
+                    return -d.width / 2
                 },
                 y1: function (d) {
-                    return -d.width / 4
+                    return 0
                 },
                 x2: function (d) {
                     return d.width / 2
                 },
                 y2: function (d) {
                     return 0
+                },
+                x3: function (d) {
+                    return 0
+                },
+                y3: function (d) {
+                    return -d.width / 4
                 },
                 from: function (d) {
                     return {x: d.x, y: d.y - d.height / 2}
@@ -154,16 +167,22 @@ class OrgTree {
                     return d.x;
                 },
                 x1: function (d) {
-                    return -d.width / 2
+                    return 0
                 },
                 y1: function (d) {
-                    return 0
+                    return -d.height / 2
                 },
                 x2: function (d) {
                     return 0
                 },
                 y2: function (d) {
                     return d.height / 2
+                },
+                x3: function (d) {
+                    return -d.width / 2
+                },
+                y3: function (d) {
+                    return 0
                 },
                 from: function (d) {
                     return {x: d.x, y: d.y - d.width / 2}
@@ -193,16 +212,22 @@ class OrgTree {
                     return d.x;
                 },
                 x1: function (d) {
-                    return d.width / 2
+                    return 0
                 },
                 y1: function (d) {
-                    return 0
+                    return -d.height / 2
                 },
                 x2: function (d) {
                     return 0
                 },
                 y2: function (d) {
                     return d.height / 2
+                },
+                x3: function (d) {
+                    return d.width / 2
+                },
+                y3: function (d) {
+                    return 0
                 },
                 from: function (d) {
                     return {x: d.x, y: d.y - d.width / 2}
@@ -699,9 +724,9 @@ class OrgTree {
             .attr('stroke', ({data, borderColor}) => data.nodeId === attrs.current ? this.rgbaObjToColor(attrs['highlight']['borderColor']) : borderColor)
             .style("fill", ({data, backgroundColor}) => data.nodeId === attrs.current ? this.rgbaObjToColor(attrs['highlight']['backgroundColor']) : backgroundColor)
 
-        /*// Move node button group to the desired position
+        //Move node button group to the desired position
         nodeUpdate.select('.node-expand-button-g')
-            .attr('transform', ({data}) => `translate(${-data.width / 2},0)`)
+            .attr('transform', ({data}) => 'translate(' + this.orientations[attrs.orientation].x3(data) + ',' + this.orientations[attrs.orientation].y3(data) + ')')
             .attr('opacity', ({children, _children}) => {
                 if (children || _children) {
                     return 1;
@@ -709,23 +734,25 @@ class OrgTree {
                 return 0;
             })
         nodeUpdate.select('.node-expand-button-circle')
-            .attr('r', 16)
+            .attr('r', 18)
             .attr('stroke-width', ({data}) => data.borderWidth || attrs.strokeWidth)
             .attr('fill', attrs.backgroundColor)
             .attr('stroke', ({borderColor}) => borderColor)
         nodeUpdate.select('.node-expand-button-text')
             .attr('text-anchor', 'middle')
-            .attr('alignment-baseline', 'middle')
+            .attr('alignment-baseline', ({children}) => {
+                if (children) return 'middle';
+                return 'top';
+            })
             .attr('fill', attrs.defaultTextFill)
             .attr('font-size', ({children}) => {
-                if (children) return 40;
                 return 26;
             })
             .text(({children}) => {
-                if (children) return '-';
-                return '+';
+                if (children) return '≡';
+                return '…';
             })
-            .attr('y', this.isEdge() ? 10 : 0)*/
+            .attr('y', this.isEdge() ? 10 : 0)
 
 
         // Move node button group to the desired position
@@ -747,7 +774,6 @@ class OrgTree {
             .attr('alignment-baseline', 'middle')
             .attr('fill', attrs.defaultTextFill)
             .attr('font-size', ({children}) => {
-                if (children) return 40;
                 return 26;
             })
             .text(({children}) => {
@@ -775,7 +801,6 @@ class OrgTree {
             .attr('alignment-baseline', 'middle')
             .attr('fill', attrs.defaultTextFill)
             .attr('font-size', ({children}) => {
-                if (children) return 40;
                 return 26;
             })
             .text(({children}) => {
