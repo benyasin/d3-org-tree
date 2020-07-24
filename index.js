@@ -389,12 +389,10 @@ class OrgTree {
         })
 
         // Collapse all children at first
+        attrs.root.children.forEach(d => this.collapse(d));
+
         // Then expand some nodes, which have `expanded` property set
-        attrs.root.children && attrs.root.children.forEach(d => {
-            this.collapse(d)
-            
-            this.expandSomeNodes(d)
-        });
+        attrs.root.children.forEach(d => this.expandSomeNodes(d));
 
         // *************************  DRAWING **************************
         //Add svg
@@ -589,7 +587,7 @@ class OrgTree {
                     .attr('stroke', ({borderColor}) => borderColor)
                     .style("fill", ({backgroundColor}) => backgroundColor)
 
-                if (attrs.current) {
+                if (attrs.current && d3.selectAll('g.node.current').length) {
                     d3.selectAll('g.node.current').node().classList.remove("current")
                 }
 
