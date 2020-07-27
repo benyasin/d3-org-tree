@@ -47,6 +47,7 @@ class OrgTree {
             linkWidth: 5,
             displayArrow: false,
             straightLink: false,
+            collapsible: false,
             current: null,
             depth: 180,
             duration: 600,
@@ -413,11 +414,17 @@ class OrgTree {
             })
         })
 
-        // Collapse all children at first
-        attrs.root.children.forEach(d => this.collapse(d));
 
-        // Then expand some nodes, which have `expanded` property set
-        attrs.root.children.forEach(d => this.expandSomeNodes(d));
+        if (attrs.collapsible) {
+            // Collapse all children at first
+            attrs.root.children.forEach(d => this.collapse(d));
+
+            // Then expand some nodes, which have `expanded` property set
+            attrs.root.children.forEach(d => this.expandSomeNodes(d));
+        } else {
+            // Expand all children at first
+            attrs.root.children.forEach(d => this.expand(d));
+        }
 
         // *************************  DRAWING **************************
         //Add svg
@@ -724,14 +731,15 @@ class OrgTree {
             .attr('stroke', ({data, borderColor}) => data.nodeId === attrs.current ? this.rgbaObjToColor(attrs['highlight']['borderColor']) : borderColor)
             .style("fill", ({data, backgroundColor}) => data.nodeId === attrs.current ? this.rgbaObjToColor(attrs['highlight']['backgroundColor']) : backgroundColor)
 
+
         //Move node button group to the desired position
         nodeUpdate.select('.node-expand-button-g')
             .attr('transform', ({data}) => 'translate(' + this.orientations[attrs.orientation].x3(data) + ',' + this.orientations[attrs.orientation].y3(data) + ')')
-            .attr('opacity', ({children, _children}) => {
-                if (children || _children) {
-                    return 1;
+            .attr('display', ({children, _children}) => {
+                if (attrs.collapsible && (children || _children)) {
+                    return "block";
                 }
-                return 0;
+                return "none";
             })
         nodeUpdate.select('.node-expand-button-circle')
             .attr('r', 18)
@@ -928,10 +936,10 @@ class OrgTree {
             d._children = null;
 
             // Set each children as expanded
-            d.children.forEach(({data}) => data.expanded = true)
+            d.children && d.children.forEach(({data}) => data.expanded = true)
         }
 
-        // Redraw Graph 
+        // Redraw Graph
         this.update(d);
     }
 
@@ -963,14 +971,16 @@ class OrgTree {
         // If node exists, set expansion flag
         if (node) node.data.expanded = expandedFlag;
 
-        // First expand all nodes
-        attrs.root.children.forEach(d => this.expand(d));
+        if (attrs.collapsible) {
+            // Then collapse them all
+            attrs.root.children && attrs.root.children.forEach(d => this.collapse(d));
 
-        // Then collapse all nodes
-        attrs.root.children.forEach(d => this.collapse(d));
-
-        // Then expand only the nodes, which were previously expanded, or have an expand flag set
-        attrs.root.children.forEach(d => this.expandSomeNodes(d));
+            // Then only expand nodes, which have expanded proprty set to true
+            attrs.root.children && attrs.root.children.forEach(ch => this.expandSomeNodes(ch));
+        } else {
+            // Expand all nodes first
+            attrs.root.children && attrs.root.children.forEach(this.expand);
+        }
 
         // Redraw graph
         this.update(attrs.root);
@@ -983,7 +993,7 @@ class OrgTree {
             // Retrieve node's parent
             let parent = d.parent;
 
-            // While we can go up 
+            // While we can go up
             while (parent) {
 
                 // Expand all current parent's children
@@ -1001,7 +1011,7 @@ class OrgTree {
             d._children.forEach(ch => this.expandSomeNodes(ch));
         }
 
-        // Recursivelly do the same for expanded nodes 
+        // Recursivelly do the same for expanded nodes
         if (d.children) {
             d.children.forEach(ch => this.expandSomeNodes(ch));
         }
@@ -1029,14 +1039,16 @@ class OrgTree {
             })
         })
 
-        // Expand all nodes first
-        attrs.root.children && attrs.root.children.forEach(this.expand);
+        if (attrs.collapsible) {
+            // Then collapse them all
+            attrs.root.children && attrs.root.children.forEach(d => this.collapse(d));
 
-        // Then collapse them all
-        attrs.root.children && attrs.root.children.forEach(d => this.collapse(d));
-
-        // Then only expand nodes, which have expanded proprty set to true
-        attrs.root.children && attrs.root.children.forEach(ch => this.expandSomeNodes(ch));
+            // Then only expand nodes, which have expanded proprty set to true
+            attrs.root.children && attrs.root.children.forEach(ch => this.expandSomeNodes(ch));
+        } else {
+            // Expand all nodes first
+            attrs.root.children && attrs.root.children.forEach(this.expand);
+        }
 
         // Redraw Graphs
         this.update(attrs.root)

@@ -153,6 +153,10 @@ orgTree.container('body') //dom element
 
 ## Changelog
 
+**0.0.7** Changes:
+
+* Added an exported switch property for controls of the expand and collapse button
+
 **0.0.6** Changes:
 
 * Re-adjusted position of the add and remove buttons
