@@ -52,7 +52,7 @@ class OrgTree {
             depth: 180,
             duration: 600,
             strokeWidth: 3,
-            initialZoom: 1,
+            initialZoom: 0.4,
             orientation: 'right-to-left',
             onNodeClick: d => d,
             onNodeAdd: d => d,
@@ -317,8 +317,10 @@ class OrgTree {
         // Store passed zoom level
         attrs.initialZoom = zoomLevel;
 
+        const group = attrs.centerG.node().getBoundingClientRect()
+
         // Rescale container element accordingly
-        attrs.centerG.attr('transform', ` translate(${calc.nodeMaxWidth}, ${calc.centerY}) scale(${attrs.initialZoom})`)
+        attrs.centerG.attr('transform', `translate(${attrs.calc.centerX - group.width / 2},${attrs.calc.centerY - group.height / 2}) scale(${attrs.initialZoom})`)
     }
 
     render() {
@@ -363,6 +365,7 @@ class OrgTree {
 
         // Calculate max node depth (it's needed for layout heights calculation)
         attrs.depth = ['top-to-bottom', 'bottom-to-top'].includes(attrs.orientation) > 0 ? (calc.nodeMaxHeight + 100) : (calc.nodeMaxWidth + 100);
+
         calc.centerX = calc.chartWidth / 2;
         calc.centerY = calc.chartHeight / 2;
 
@@ -374,16 +377,17 @@ class OrgTree {
 
         // Generate tree layout function
         layouts.treemap = d3.tree().size([calc.chartWidth, calc.chartHeight])
-            .nodeSize([calc.nodeMaxWidth + 100, calc.nodeMaxHeight])
+            .nodeSize([calc.nodeMaxWidth + 100, calc.nodeMaxHeight + 100])
 
         // ******************* BEHAVIORS . **********************
         const behaviors = {zoom: null}
 
         // Get zooming function
         behaviors.zoom = d3.zoom()
-            .scaleExtent([0.4, 4])
+            .scaleExtent([0.5, 2])
             .on('zoom', () => {
-                d3.select('.chart').attr('transform', d3.event.transform);
+                const attrs = this.getChartState();
+                attrs.chart.attr('transform', d3.event.transform);
                 // Apply new styles to the foreign object element
                 if (this.isEdge()) {
                     this.restyleForeignObjectElements();
@@ -463,19 +467,19 @@ class OrgTree {
                 tag: 'g',
                 selector: 'chart'
             })
-            .attr('transform', `translate(${attrs.marginLeft},${attrs.marginTop})`);
 
         // Add one more container g element, for better positioning controls
         attrs.centerG = chart.patternify({
             tag: 'g',
             selector: 'center-group'
         })
-            .attr('transform', `translate(${calc.centerX},${calc.centerY}) scale(${attrs.initialZoom})`);
 
         attrs.chart = chart;
 
         // Display tree contenrs
         this.update(attrs.root)
+
+        attrs.centerG.attr('transform', `translate(${attrs.calc.centerX},${attrs.calc.centerY}) scale(${attrs.initialZoom})`);
 
         //#########################################  UTIL FUNCS ##################################
         // This function restyles foreign object elements ()
@@ -541,6 +545,9 @@ class OrgTree {
 
         // Get all links
         const links = treeData.descendants().slice(1);
+
+        //re-calculate depth for each nodes according to orientation
+        attrs.depth = ['top-to-bottom', 'bottom-to-top'].includes(attrs.orientation) > 0 ? (calc.nodeMaxHeight + 100) : (calc.nodeMaxWidth + 100);
 
         // Set constant depth for each nodes
         nodes.forEach(d => {

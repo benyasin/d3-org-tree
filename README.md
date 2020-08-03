@@ -132,7 +132,7 @@ orgTree.container('body') //dom element
 |  strokeWidth  | `number`, the stroke width of node, the default value is `3` |
 |  linkColor  | `object`, the rgba color object of link, the default value is `3` |
 |  linkWidth  | `number`, the stroke width of link, the default value is `5` |
-|  initialZoom  | `number`, the initial zoom scale, the default value is `1` |
+|  initialZoom  | `number`, the initial zoom scale, the default value is `0.4` |
 |  orientation  | `string`, the layout orientation, which value is one of `left-to-right`、`right-to-left`、`top-to-bottom`、`bottom-to-top`, and the default one is `right-to-left` |
 |  collapsible  | `boolean`, show the expand/collapse button, the default value is `false`, if its value is `false`, all `expanded` property in each data object will not take in effect  |
 |  displayArrow  | `boolean`, show the link arrow, the default value is `true` |
@@ -153,6 +153,10 @@ orgTree.container('body') //dom element
 |  removeNode(nodeId)  | `function`, remove a node by the nodeId |
 
 ## Changelog
+
+**0.0.8** Changes:
+
+* Fixed bugs for svg element position
 
 **0.0.7** Changes:
 
