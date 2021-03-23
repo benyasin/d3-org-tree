@@ -1,7 +1,7 @@
 {
   "name": "d3-org-tree",
-  "version": "0.0.8",
-  "description": "A highly customizable org tree built with d3.js v5",
+  "version": "0.0.9",
+  "description": "A highly customizable org tree built with d3.js v6",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -385,9 +385,9 @@ class OrgTree {
         // Get zooming function
         behaviors.zoom = d3.zoom()
             .scaleExtent([0.5, 2])
-            .on('zoom', () => {
+            .on('zoom', (event) => {
                 const attrs = this.getChartState();
-                attrs.chart.attr('transform', d3.event.transform);
+                attrs.chart.attr('transform', event.transform);
                 // Apply new styles to the foreign object element
                 if (this.isEdge()) {
                     this.restyleForeignObjectElements();
@@ -615,8 +615,8 @@ class OrgTree {
             .attr('id', d => d.id)
             .attr("transform", d => `translate(${x0},${y0})`)
             .attr('cursor', 'pointer')
-            .on('click', ({data}) => {
-                if ([...d3.event.srcElement.classList].includes('node-expand-button-circle') || [...d3.event.srcElement.classList].includes('node-add-button-circle') || [...d3.event.srcElement.classList].includes('node-remove-button-circle')) {
+            .on('click', (event, {data}) => {
+                if ([...event.srcElement.classList].includes('node-expand-button-circle') || [...event.srcElement.classList].includes('node-add-button-circle') || [...event.srcElement.classList].includes('node-remove-button-circle')) {
                     return;
                 }
 
@@ -666,7 +666,7 @@ class OrgTree {
             .patternify({
                 tag: 'g', selector: 'node-expand-button-g', data: d => [d]
             })
-            .on('click', d => this.onButtonClick(d))
+            .on('click', (event,d) => this.onButtonClick(d))
         nodeExpandButtonGroups
             .patternify({
                 tag: 'circle', selector: 'node-expand-button-circle', data: d => [d]
@@ -683,7 +683,7 @@ class OrgTree {
             .patternify({
                 tag: 'g', selector: 'node-add-button-g', data: d => [d]
             })
-            .on('click', d => {
+            .on('click', (event,d) => {
                 attrs.onNodeAdd(d.id);
             })
         nodeAddButtonGroups
@@ -702,7 +702,7 @@ class OrgTree {
             .patternify({
                 tag: 'g', selector: 'node-remove-button-g', data: d => [d]
             })
-            .on('click', d => {
+            .on('click', (event, d) => {
                 attrs.onNodeRemove(d.id);
             })
         nodeRemoveButtonGroups
@@ -847,7 +847,6 @@ class OrgTree {
             d.y0 = d.y;
         });
     }
-
 
     addNode(obj) {
         const attrs = this.getChartState();
