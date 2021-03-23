@@ -154,6 +154,10 @@ orgTree.container('body') //dom element
 
 ## Changelog
 
+**0.0.9** Changes:
+
+* Make it compatible with the latest version of d3
+
 **0.0.8** Changes:
 
 * Fixed bugs for svg element position
